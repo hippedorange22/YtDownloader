@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
 
                                 // Build the directory.
                                 var dir = await DownloadsPathProvider.downloadsDirectory;
-                                var filePath = paths.join(downloadsPath, 'music.mp3');
+                                var filePath = paths.join(downloadsPath, '${video.title}.mp3');
 
                                 // Open the file to write.
                                 var file = File(filePath);
