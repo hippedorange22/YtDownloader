@@ -163,6 +163,9 @@ class _HomeState extends State<Home> {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
                                     "Please enter the search query or paste a YouTube link first.",
+                                    style: TextStyle(
+                                        fontFamily: "Manrope"
+                                    ),
                                   ),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                                   duration: Duration(seconds: 5),
@@ -230,6 +233,9 @@ class _HomeState extends State<Home> {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
                                     "Successfully downloaded $vidTitle",
+                                    style: TextStyle(
+                                      fontFamily: "Manrope"
+                                    ),
                                   ),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                                   duration: Duration(seconds: 3),
@@ -250,6 +256,9 @@ class _HomeState extends State<Home> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                 "Error occurred. Please paste the link and try again.",
+                                style: TextStyle(
+                                    fontFamily: "Manrope"
+                                ),
                               ),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                               duration: Duration(seconds: 5),
