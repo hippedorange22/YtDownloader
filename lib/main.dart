@@ -37,7 +37,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String searchQuery = "";
   String url = "";
-  String vidTitle = "storage/emulated/0/YTDownloads";
+  String vidTitle = "";
+  String vidDuration = "";
   String downloadsPath = "storage/emulated/0/YTDownloads";
   String sharedURL = "";
   int downloadProgress = 0;
@@ -150,15 +151,12 @@ class _HomeState extends State<Home> {
                             : const Text('Download'),
                         onPressed: () async {
                           try {
+                            FocusScope.of(context).unfocus();
 
                             if(isLoading)
                               {return;} else {
-                              setState(() {
-                                exceptionError = false;
-                                isLoading = true;
-                              });
-                              await ytDl.search.getVideos(searchQuery).then((value) => url = value[0].url);
-                              if (url == "" || url == null) {
+
+                              if (url == "" || searchQuery == '') {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
                                     "Please enter the search query or paste a YouTube link first.",
@@ -168,6 +166,12 @@ class _HomeState extends State<Home> {
                                   behavior: SnackBarBehavior.floating,
                                 ));
                               } else {
+                                setState(() {
+                                  exceptionError = false;
+                                  isLoading = true;
+                                });
+                                await ytDl.search.getVideos(searchQuery).then((value) => url = value[0].url);
+
                                 FocusScope.of(context).unfocus();
 
 
@@ -177,6 +181,7 @@ class _HomeState extends State<Home> {
 
                                 setState(() {
                                   vidTitle = video.title;
+                                  vidDuration = ((video.duration)).toString().replaceAll(".000000","");
                                   isLoading = false;
                                   downloadStarted = true;
                                 });
@@ -228,6 +233,7 @@ class _HomeState extends State<Home> {
                                   behavior: SnackBarBehavior.floating,
                                 ));
                                 vidTitle = "";
+                                vidDuration = "";
                               }
                             }
 
@@ -273,6 +279,17 @@ class _HomeState extends State<Home> {
                                 width: 0.6 * screenSize.width,
                                 child: Text(
                                   vidTitle,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 0.018 * screenSize.height,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 0.01 * screenSize.height,),
+                              Container(
+                                width: 0.6 * screenSize.width,
+                                child: Text(
+                                  vidDuration,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 0.018 * screenSize.height,
