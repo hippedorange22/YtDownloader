@@ -189,7 +189,6 @@ class _HomeState extends State<Home> {
                                 var audioStream = yt.videos.streamsClient.get(audio);
 
                                 // Build the directory.
-                                var dir = await DownloadsPathProvider.downloadsDirectory;
                                 var filePath = paths.join(downloadsPath, '${video.title.replaceAll("|", "")}.mp3');
 
                                 // Open the file to write.
@@ -202,6 +201,7 @@ class _HomeState extends State<Home> {
 
                                 await yt.videos.streamsClient.get(audio).pipe(fileStream);
 
+                                //Calculating the download progress
                                 await for (final data in audioStream) {
                                   count += data.length;
                                   i = ((count / len) * 100).ceil();
@@ -216,8 +216,6 @@ class _HomeState extends State<Home> {
                                   url = "";
                                 });
                                 textController.clear();
-                                /*String newPath = paths.join("/storage/emulated/0/", "$vidTitle.mp3");
-                                    await file.rename(newPath);*/
 
                                 // Close the file.
                                 await fileStream.flush();
@@ -333,73 +331,3 @@ class _HomeState extends State<Home> {
   }
 }
 
-class DownloadSheet extends StatefulWidget {
-  DownloadSheet({Key? key, this.screenSize, this.progress, this.downloadStarted, this.title, this.listener}) : super(key: key);
-
-  final screenSize;
-  final progress;
-  final downloadStarted;
-  final title;
-  final listener;
-
-  @override
-  _DownloadSheetState createState() => _DownloadSheetState();
-}
-
-class _DownloadSheetState extends State<DownloadSheet> {
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: widget.listener,
-      builder: (context, i, child) {
-        i = widget.progress;
-        return Padding(
-          padding: EdgeInsets.only(left: 0.02 * widget.screenSize.width, right: 0.02 * widget.screenSize.width),
-          child: Container(
-            decoration:
-            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 0.015 * widget.screenSize.height,
-                ),
-                Container(
-                  height: 0.005 * widget.screenSize.height,
-                  width: 0.2 * widget.screenSize.width,
-                  decoration: BoxDecoration(color: Colors.black.withOpacity(0.2), borderRadius: BorderRadius.circular(15)),
-                ),
-                SizedBox(height: 0.03 * widget.screenSize.height),
-                Text(
-                  "Now Downloading,",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 0.018 * widget.screenSize.height, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 0.03 * widget.screenSize.height),
-                Text(
-                  widget.title ?? "",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 0.018 * widget.screenSize.height,
-                  ),
-                ),
-                SizedBox(height: 0.03 * widget.screenSize.height),
-                widget.downloadStarted
-                    ? Container(
-                  width: 0.8 * widget.screenSize.width,
-                  child: NeumorphicProgress(
-                    percent: widget.progress != null ? (i as int) * 0.01 : 0.0,
-                    style: ProgressStyle(
-                      depth: -15,
-                    ),
-                  ),
-                )
-                    : Container(),
-                MaterialButton(onPressed: () {})
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
