@@ -22,6 +22,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(title: 'YouTube Music Downloader',
         home: Home(),
+      theme: ThemeData(
+        fontFamily: "Manrope"
+      ),
 
     );
   }
