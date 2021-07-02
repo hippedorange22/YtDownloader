@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'YouTube Music Downloader',
-        home: Home());
+        home: Home(),
+
+    );
   }
 }
 
@@ -89,6 +91,7 @@ class _HomeState extends State<Home> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Center(
             child: ValueListenableBuilder(
               valueListenable: progressListenable,
@@ -99,7 +102,7 @@ class _HomeState extends State<Home> {
                     Container(
                       width: 0.6 * screenSize.width,
                       child: Text(
-                        "Paste the YouTube link below to download the audio.",
+                        "Search for the music or paste the YouTube link below to download the audio.",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 0.02 * screenSize.height),
                       ),
@@ -118,6 +121,7 @@ class _HomeState extends State<Home> {
                             controller: textController,
                             onChanged: (value) {
                               url = value;
+                              searchQuery = value;
                             },
                             decoration: InputDecoration(border: InputBorder.none,
 
@@ -129,6 +133,7 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       height: 0.01 * screenSize.height,
                     ),
+                    Text(sharedURL),
                     downloadStarted
                         ? Container()
                         : NeumorphicButton(
@@ -146,12 +151,18 @@ class _HomeState extends State<Home> {
                             : const Text('Download'),
                         onPressed: () async {
                           try {
+
                             if(isLoading)
                               {return;} else {
+                              setState(() {
+                                exceptionError = false;
+                                isLoading = true;
+                              });
+                              await ytDl.search.getVideos(searchQuery).then((value) => url = value[0].url);
                               if (url == "" || url == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
-                                    "Please paste a YouTube link first.",
+                                    "Please enter the search query or paste a YouTube link first.",
                                   ),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                                   duration: Duration(seconds: 5),
@@ -159,10 +170,8 @@ class _HomeState extends State<Home> {
                                 ));
                               } else {
                                 FocusScope.of(context).unfocus();
-                                setState(() {
-                                  exceptionError = false;
-                                  isLoading = true;
-                                });
+
+
                                 var yt = YoutubeExplode();
                                 var id = VideoId(url.trim());
                                 var video = await yt.videos.get(id);
@@ -181,13 +190,15 @@ class _HomeState extends State<Home> {
 
                                 // Build the directory.
                                 var dir = await DownloadsPathProvider.downloadsDirectory;
-                                var filePath = paths.join(downloadsPath, '${video.title}.mp3');
+                                var filePath = paths.join(downloadsPath, '${video.title.replaceAll("|", "")}.mp3');
 
                                 // Open the file to write.
                                 var file = File(filePath);
                                 var fileStream = file.openWrite();
+
                                 var len = audio.size.totalBytes;
                                 var count = 0;
+
 
                                 await yt.videos.streamsClient.get(audio).pipe(fileStream);
 
