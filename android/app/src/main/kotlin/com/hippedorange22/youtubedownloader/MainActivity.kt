@@ -15,6 +15,10 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
         handleIntent()
     }
+    override fun onResume() {
+        super.onResume();
+        handleIntent();
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

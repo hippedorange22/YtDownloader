@@ -35,7 +35,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String progress = "1";
   String searchQuery = "";
   String url = "";
   String vidTitle = "storage/emulated/0/YTDownloads";
