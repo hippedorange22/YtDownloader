@@ -16,7 +16,7 @@ dependencies:
 
 
   permission_handler: ^8.1.2
-  youtube_explode_dart: ^1.9.7
+  youtube_explode_dart: ^1.9.8+1
   downloads_path_provider_28: ^0.1.2
   flutter_neumorphic: ^3.1.0
   clay_containers: ^0.3.2
